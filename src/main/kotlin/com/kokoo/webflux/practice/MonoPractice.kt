@@ -19,4 +19,33 @@ class MonoPractice {
             example
         }
     }
+
+    fun onErrorReturn(): Mono<Example> {
+        return Mono.fromSupplier {
+            throw RuntimeException()
+            Example()
+        }.onErrorReturn(Example())
+    }
+
+    fun onErrorResume(): Mono<Example> {
+        return Mono.fromSupplier {
+            throw RuntimeException()
+            Example()
+        }.onErrorResume {
+            Mono.just(Example())
+        }
+    }
+
+    fun onErrorResumeAndRetry(retryCount: Long): Mono<Int> {
+        var triedCount = 0
+
+        return Mono.fromSupplier {
+            triedCount++
+            throw RuntimeException()
+            0
+        }.retry(retryCount)
+            .onErrorResume {
+                Mono.just(triedCount)
+            }
+    }
 }
