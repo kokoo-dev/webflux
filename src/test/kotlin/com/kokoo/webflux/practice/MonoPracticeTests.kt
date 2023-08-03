@@ -18,7 +18,7 @@ class MonoPracticeTests {
     }
 
     @Test
-    fun getExampleDefault_ExampleIsNull() {
+    fun switchIfEmpty_GetExampleDefault_ExampleIsNull() {
         val expect = Example()
         val example: Example? = null
 
@@ -27,5 +27,18 @@ class MonoPracticeTests {
         StepVerifier.create(actual)
                 .expectNext(expect)
                 .verifyComplete()
+    }
+
+    @Test
+    fun fromSupplier_GetExample_StringFieldPresent() {
+        val stringField = "test"
+        val expect = Example()
+        expect.stringField = stringField
+
+        val actual: Mono<Example> = monoPractice.fromSupplier(stringField)
+
+        StepVerifier.create(actual)
+            .expectNext(expect)
+            .verifyComplete()
     }
 }

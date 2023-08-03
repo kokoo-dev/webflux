@@ -11,4 +11,12 @@ class MonoPractice {
                     Mono.just(Example())
                 })
     }
+
+    fun fromSupplier(stringField: String): Mono<Example> {
+        return Mono.fromSupplier {
+            val example = Example()
+            example.stringField = stringField
+            example
+        }
+    }
 }
