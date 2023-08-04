@@ -30,9 +30,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 
 	// log
-	implementation("ch.qos.logback:logback-classic")
-	implementation("ch.qos.logback:logback-core")
 	implementation("org.slf4j:slf4j-api")
+	implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
 }
 
 tasks.withType<KotlinCompile> {

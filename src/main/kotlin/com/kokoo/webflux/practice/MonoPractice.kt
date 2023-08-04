@@ -1,15 +1,17 @@
 package com.kokoo.webflux.practice
 
 import com.kokoo.webflux.component.Example
+import mu.KotlinLogging
 import reactor.core.publisher.Mono
 
 class MonoPractice {
 
+    private val log = KotlinLogging.logger {}
     fun switchIfEmpty(example: Example?): Mono<Example> {
         return Mono.justOrEmpty(example)
-                .switchIfEmpty(Mono.defer {
-                    Mono.just(Example())
-                })
+            .switchIfEmpty(Mono.defer {
+                Mono.just(Example())
+            })
     }
 
     fun fromSupplier(stringField: String): Mono<Example> {
