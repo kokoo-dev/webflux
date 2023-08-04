@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
+import reactor.util.retry.Retry
+import java.time.Duration
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MonoPracticeTests {
@@ -19,15 +21,14 @@ class MonoPracticeTests {
     }
 
     @Test
-    fun switchIfEmpty_GetExampleDefault_ExampleIsNull() {
+    fun switchIfEmpty_GetExampleDefault_MonoIsEmpty() {
         val expect = Example()
-        val example: Example? = null
 
-        val actual: Mono<Example> = monoPractice.switchIfEmpty(example)
+        val actual: Mono<Example> = monoPractice.switchIfEmpty()
 
         StepVerifier.create(actual)
-                .expectNext(expect)
-                .verifyComplete()
+            .expectNext(expect)
+            .verifyComplete()
     }
 
     @Test
@@ -67,15 +68,47 @@ class MonoPracticeTests {
                 .expectNext(expect)
                 .verifyComplete()
         }
+    }
+
+    @Nested
+    inner class ErrorRetry {
 
         @Test
-        fun onErrorResumeAndRetry_GetThreeTryCount_RetryCountIsTwo() {
+        fun retry_GetThreeTryCount_RetryCountIsTwo() {
             val expect = 3
 
-            val actual: Mono<Int> = monoPractice.onErrorResumeAndRetry(2)
+            val actual: Mono<Int> = monoPractice.retry(2)
 
             StepVerifier.create(actual)
                 .expectNext(expect)
+                .verifyComplete()
+        }
+
+        @Test
+        fun retryWhen_LessThanRunTime_FixedDelayCountIsTwoAndDurationSecondsIsOne() {
+            val retryBackoff = Retry.fixedDelay(2, Duration.ofSeconds(1));
+            val expect: Long = 3000
+
+            val actual: Mono<Long> = monoPractice.retryWhen(retryBackoff)
+
+            StepVerifier.create(actual)
+                .expectNextMatches {
+                    it < expect
+                }
+                .verifyComplete()
+        }
+
+        @Test
+        fun retryWhen_LessThanRunTime_BackoffCountIsTwoAndDurationSecondsIsOne() {
+            val retryBackoff = Retry.backoff(2, Duration.ofSeconds(1));
+            val expect: Long = 5000
+
+            val actual: Mono<Long> = monoPractice.retryWhen(retryBackoff)
+
+            StepVerifier.create(actual)
+                .expectNextMatches {
+                    it < expect
+                }
                 .verifyComplete()
         }
     }

@@ -2,13 +2,16 @@ package com.kokoo.webflux.practice
 
 import com.kokoo.webflux.component.Example
 import mu.KotlinLogging
+import org.springframework.util.StopWatch
 import reactor.core.publisher.Mono
+import reactor.util.retry.Retry
 
 class MonoPractice {
 
     private val log = KotlinLogging.logger {}
-    fun switchIfEmpty(example: Example?): Mono<Example> {
-        return Mono.justOrEmpty(example)
+
+    fun switchIfEmpty(): Mono<Example> {
+        return Mono.empty<Example>()
             .switchIfEmpty(Mono.defer {
                 Mono.just(Example())
             })
@@ -38,16 +41,33 @@ class MonoPractice {
         }
     }
 
-    fun onErrorResumeAndRetry(retryCount: Long): Mono<Int> {
+    fun retry(retryCount: Long): Mono<Int> {
         var triedCount = 0
 
         return Mono.fromSupplier {
             triedCount++
             throw RuntimeException()
-            0
+            triedCount
         }.retry(retryCount)
             .onErrorResume {
                 Mono.just(triedCount)
+            }
+    }
+
+    fun retryWhen(retry: Retry): Mono<Long> {
+        val stopWatch = StopWatch()
+        stopWatch.start()
+
+        return Mono.fromSupplier {
+            throw RuntimeException()
+            0L
+        }.retryWhen(retry)
+            .onErrorResume {
+                stopWatch.stop()
+
+                log.info("stop watch :: ${stopWatch.lastTaskTimeMillis}")
+
+                Mono.just(stopWatch.lastTaskTimeMillis)
             }
     }
 }
