@@ -32,6 +32,12 @@ dependencies {
 	// log
 	implementation("org.slf4j:slf4j-api")
 	implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
+
+	// redis
+	implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+	testImplementation("it.ozimov:embedded-redis:0.7.3") {
+		exclude("org.slf4j", "slf4j-simple")
+	}
 }
 
 tasks.withType<KotlinCompile> {
