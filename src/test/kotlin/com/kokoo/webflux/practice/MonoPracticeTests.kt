@@ -34,8 +34,7 @@ class MonoPracticeTests {
     @Test
     fun fromSupplier_GetExample_StringFieldPresent() {
         val stringField = "test"
-        val expect = Example()
-        expect.stringField = stringField
+        val expect = Example(stringField = stringField)
 
         val actual: Mono<Example> = monoPractice.fromSupplier(stringField)
 
