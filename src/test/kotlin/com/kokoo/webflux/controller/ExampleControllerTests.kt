@@ -2,14 +2,14 @@ package com.kokoo.webflux.controller
 
 import com.kokoo.webflux.component.Example
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.http.MediaType
+import org.springframework.test.context.TestConstructor
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @WebFluxTest(controllers = [ExampleController::class])
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class ExampleControllerTests(
-        @Autowired
         private val webTestClient: WebTestClient
 ) {
 
