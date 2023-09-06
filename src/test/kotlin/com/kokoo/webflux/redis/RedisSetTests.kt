@@ -24,12 +24,16 @@ class RedisSetTests(
         private val redisOperations: ReactiveRedisOperations<String, String>
 ) {
 
+    companion object {
+        const val INITIAL_COUNT = 10
+    }
+
     @BeforeEach
     fun beforeEach() {
         factory.reactiveConnection
                 .serverCommands()
                 .flushAll()
-                .thenMany(Flux.range(1, RedisValueTests.INITIAL_COUNT.toInt()).flatMap<Any> {
+                .thenMany(Flux.range(1, INITIAL_COUNT).flatMap<Any> {
                     redisOperations.opsForSet().add("1", createValue(it))
                 })
                 .subscribe()
@@ -38,7 +42,7 @@ class RedisSetTests(
     @Test
     fun add() {
         val key = "1"
-        val newMember = createValue(101)
+        val newMember = createValue(INITIAL_COUNT + 1)
         val expect = 1L
 
         val actual = redisOperations
@@ -84,7 +88,7 @@ class RedisSetTests(
     @Test
     fun size() {
         val key = "1"
-        val expect = 100L
+        val expect = INITIAL_COUNT.toLong()
 
         val actual = redisOperations
                 .opsForSet()
@@ -98,7 +102,7 @@ class RedisSetTests(
     @Test
     fun members() {
         val key = "1"
-        val expect = 100L
+        val expect = INITIAL_COUNT.toLong()
 
         val actual = redisOperations
                 .opsForSet()
