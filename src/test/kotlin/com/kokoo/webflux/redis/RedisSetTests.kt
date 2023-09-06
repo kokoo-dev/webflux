@@ -25,7 +25,8 @@ class RedisSetTests(
 ) {
 
     companion object {
-        const val INITIAL_COUNT = 10
+        private const val INITIAL_COUNT = 10
+        private const val INITIAL_KEY = 1
     }
 
     @BeforeEach
@@ -33,7 +34,7 @@ class RedisSetTests(
         factory.reactiveConnection
                 .serverCommands()
                 .flushAll()
-                .thenMany(Flux.range(1, INITIAL_COUNT).flatMap<Any> {
+                .thenMany(Flux.range(INITIAL_KEY, INITIAL_COUNT).flatMap<Any> {
                     redisOperations.opsForSet().add("1", createValue(it))
                 })
                 .subscribe()
@@ -41,7 +42,7 @@ class RedisSetTests(
 
     @Test
     fun add() {
-        val key = "1"
+        val key = INITIAL_KEY.toString()
         val newMember = createValue(INITIAL_COUNT + 1)
         val expect = 1L
 
@@ -56,13 +57,13 @@ class RedisSetTests(
 
     @Test
     fun remove() {
-        val key = 1
+        val key = INITIAL_KEY.toString()
         val vararg = createValue(key)
         val expect = 1L
 
         val actual = redisOperations
                 .opsForSet()
-                .remove(key.toString(), vararg)
+                .remove(key, vararg)
 
         StepVerifier.create(actual)
                 .expectNext(expect)
@@ -71,7 +72,7 @@ class RedisSetTests(
 
     @Test
     fun pop() {
-        val key = "1"
+        val key = INITIAL_KEY.toString()
         val expect = "-added"
 
         val actual = redisOperations
@@ -87,7 +88,7 @@ class RedisSetTests(
 
     @Test
     fun size() {
-        val key = "1"
+        val key = INITIAL_KEY.toString()
         val expect = INITIAL_COUNT.toLong()
 
         val actual = redisOperations
@@ -101,7 +102,7 @@ class RedisSetTests(
 
     @Test
     fun members() {
-        val key = "1"
+        val key = INITIAL_KEY.toString()
         val expect = INITIAL_COUNT.toLong()
 
         val actual = redisOperations
@@ -115,20 +116,20 @@ class RedisSetTests(
 
     @Test
     fun isMembers() {
-        val key = 1
+        val key = INITIAL_KEY.toString()
         val vararg = createValue(key)
         val expect = true
 
         val actual = redisOperations
                 .opsForSet()
-                .isMember(key.toString(), vararg)
+                .isMember(key, vararg)
 
         StepVerifier.create(actual)
                 .expectNext(expect)
                 .verifyComplete()
     }
 
-    private fun createValue(key: Int): String {
+    private fun createValue(key: Any): String {
         return StringBuilder().append(key).append("-added").toString()
     }
 }

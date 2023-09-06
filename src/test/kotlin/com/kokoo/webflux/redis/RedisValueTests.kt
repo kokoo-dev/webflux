@@ -25,7 +25,7 @@ class RedisValueTests(
 ) {
 
     companion object {
-        const val INITIAL_COUNT = 10
+        private const val INITIAL_COUNT = 10
     }
 
     @BeforeEach
@@ -57,12 +57,12 @@ class RedisValueTests(
 
     @Test
     fun get() {
-        val key = 1
+        val key = "1"
         val expect = createValue(key)
 
         val actual = redisOperations
                 .opsForValue()
-                .get(key.toString())
+                .get(key)
 
         StepVerifier.create(actual)
                 .expectNext(expect)
@@ -84,12 +84,13 @@ class RedisValueTests(
 
     @Test
     fun set() {
-        val key = INITIAL_COUNT + 1
+        val key = (INITIAL_COUNT + 1).toString()
+        val value = createValue(key)
         val expect = true
 
         val actual = redisOperations
                 .opsForValue()
-                .set(key.toString(), createValue(key))
+                .set(key, value)
 
         StepVerifier.create(actual)
                 .expectNext(expect)
@@ -98,19 +99,19 @@ class RedisValueTests(
 
     @Test
     fun delete() {
-        val key = 1
+        val key = "1"
         val expect = true
 
         val actual = redisOperations
                 .opsForValue()
-                .delete(key.toString())
+                .delete(key)
 
         StepVerifier.create(actual)
                 .expectNext(expect)
                 .verifyComplete()
     }
 
-    private fun createValue(key: Int): String {
+    private fun createValue(key: Any): String {
         return StringBuilder().append(key).append("-added").toString()
     }
 }
