@@ -38,6 +38,9 @@ dependencies {
 	testImplementation("it.ozimov:embedded-redis:0.7.3") {
 		exclude("org.slf4j", "slf4j-simple")
 	}
+
+	// mongodb
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 }
 
 tasks.withType<KotlinCompile> {
