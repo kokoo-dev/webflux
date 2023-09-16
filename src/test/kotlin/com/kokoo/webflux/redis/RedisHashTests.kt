@@ -35,7 +35,7 @@ class RedisHashTests(
                 .serverCommands()
                 .flushAll()
                 .thenMany(Flux.range(INITIAL_KEY.toInt(), INITIAL_COUNT).flatMap<Any> {
-                    redisOperations.opsForHash<String, String>().put(INITIAL_KEY.toString(), it.toString(), INITIAL_VALUE)
+                    redisOperations.opsForHash<String, String>().put(INITIAL_KEY, it.toString(), INITIAL_VALUE)
                 })
                 .subscribe()
     }

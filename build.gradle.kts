@@ -41,6 +41,7 @@ dependencies {
 
 	// mongodb
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
+	testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 }
 
 tasks.withType<KotlinCompile> {

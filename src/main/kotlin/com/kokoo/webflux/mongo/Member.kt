@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
-import java.time.LocalDateTime
+import java.util.Date
 
 @Document("MEMBER")
 data class Member(
@@ -21,9 +21,9 @@ data class Member(
 
         @Field
         @CreatedDate
-        val createdAt: LocalDateTime? = null,
+        val createdAt: Date? = null,
 
         @Field
         @LastModifiedDate
-        val modifiedAt: LocalDateTime? = null
+        val modifiedAt: Date? = null
 )
