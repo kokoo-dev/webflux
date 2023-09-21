@@ -9,3 +9,8 @@ spring:
       port: 27017
   jackson:
     default-property-inclusion: non_null
+  webclient:
+    connection_timeout_millis: 5000
+    read_timeout_second: 5
+    write_timeout_second: 5
+    api_sample_url: http://localhost:8808
