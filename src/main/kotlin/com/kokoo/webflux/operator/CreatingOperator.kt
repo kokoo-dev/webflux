@@ -3,7 +3,7 @@ package com.kokoo.webflux.operator
 import reactor.core.publisher.Flux
 import java.time.Duration
 
-class CreationOperator {
+class CreatingOperator {
 
     fun just(number: Int): Flux<Int> {
         return Flux.just(number)

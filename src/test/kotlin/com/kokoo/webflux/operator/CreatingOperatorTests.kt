@@ -7,13 +7,13 @@ import reactor.test.StepVerifier
 import java.time.Duration
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CreationOperatorTests {
+class CreatingOperatorTests {
 
-    private lateinit var creationOperator: CreationOperator
+    private lateinit var creatingOperator: CreatingOperator
 
     @BeforeAll
     fun beforeAll() {
-        creationOperator = CreationOperator()
+        creatingOperator = CreatingOperator()
     }
 
     @Test
@@ -21,7 +21,7 @@ class CreationOperatorTests {
         val number = 1
         val expect = 1
 
-        val actual = creationOperator.just(number)
+        val actual = creatingOperator.just(number)
 
         StepVerifier.create(actual)
                 .expectNext(expect)
@@ -33,7 +33,7 @@ class CreationOperatorTests {
         val number = 1
         val expect = 1
 
-        val actual = creationOperator.defer(number)
+        val actual = creatingOperator.defer(number)
 
         StepVerifier.create(actual)
                 .expectNext(expect)
@@ -44,7 +44,7 @@ class CreationOperatorTests {
     fun empty() {
         val expect = 0L
 
-        val actual = creationOperator.empty()
+        val actual = creatingOperator.empty()
 
         StepVerifier.create(actual)
                 .expectNextCount(expect)
@@ -56,7 +56,7 @@ class CreationOperatorTests {
         val number = 1
         val expect = 1
 
-        val actual = creationOperator.from(number)
+        val actual = creatingOperator.from(number)
 
         StepVerifier.create(actual)
                 .expectNext(expect)
@@ -72,7 +72,7 @@ class CreationOperatorTests {
         val expect1 = 0L
         val expect2 = 1L
 
-        val actual = creationOperator.interval(period).take(takeCount)
+        val actual = creatingOperator.interval(period).take(takeCount)
 
         StepVerifier.withVirtualTime {
             actual
@@ -90,7 +90,7 @@ class CreationOperatorTests {
         val count = 2
         val expect = 2L
 
-        val actual = creationOperator.range(start, count)
+        val actual = creatingOperator.range(start, count)
 
         StepVerifier.create(actual)
                 .expectNextCount(expect)
@@ -102,7 +102,7 @@ class CreationOperatorTests {
         val count = 1L
         val expect = 1
 
-        val actual = creationOperator.repeat(count)
+        val actual = creatingOperator.repeat(count)
 
         StepVerifier.withVirtualTime {
             actual
